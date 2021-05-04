@@ -1,0 +1,4 @@
+jupyter
+sklearn
+bentoml
+pandas
