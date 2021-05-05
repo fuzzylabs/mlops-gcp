@@ -1,0 +1,11 @@
+workerPoolSpecs:
+  machineSpec:
+    machineType: n2-standard-4
+  replicaCount: 1
+  pythonPackageSpec:
+    packageUris:
+      - gs://wine-quality-model/trainer-0.1.tar.gz
+    executorImageUri: europe-docker.pkg.dev/cloud-aiplatform/training/scikit-learn-cpu.0-23:latest
+    pythonModule: training.task
+baseOutputDirectory:
+  outputUriPrefix: "gs://wine-quality-model/trained/"
