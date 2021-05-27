@@ -6,3 +6,5 @@ jupyter
 pandas
 google-cloud-aiplatform[tensorboard]
 google-cloud-storage
+kfp
+google-cloud-pipeline-components
