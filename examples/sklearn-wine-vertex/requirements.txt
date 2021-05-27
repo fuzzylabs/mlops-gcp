@@ -1,0 +1,8 @@
+sklearn
+torch
+torchvision
+tensorboard
+jupyter
+pandas
+google-cloud-aiplatform[tensorboard]
+google-cloud-storage
