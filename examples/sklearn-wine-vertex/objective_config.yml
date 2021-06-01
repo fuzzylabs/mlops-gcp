@@ -1,0 +1,9 @@
+modelDeploymentMonitoringObjectiveConfigs:
+- deployedModelId: '3214989591803068416'
+  objectiveConfig:
+      trainingDataset:
+        dataFormat: csv
+        gcsSource:
+          uris:
+          - gs://wine-quality-model/wine-quality.csv
+        targetField: quality
