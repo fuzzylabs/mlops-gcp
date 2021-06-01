@@ -1,0 +1,4 @@
+outs:
+- md5: fc6c9afc03e7c02ddd265b252524d461
+  size: 26421880
+  path: train-images-idx3-ubyte.gz
