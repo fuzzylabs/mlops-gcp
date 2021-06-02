@@ -39,8 +39,8 @@ stages:
       size: 1564
     params:
       params.yaml:
-        train.n_neighbours: 1
+        train.n_neighbours: 7
     outs:
     - path: metrics.json
-      md5: e68f58e71ccf7bdbf8ce74da485c750e
-      size: 24
+      md5: 4928f52f402b3665c5ead52b4c197421
+      size: 23
