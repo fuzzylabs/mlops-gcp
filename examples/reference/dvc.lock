@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  prepare-mnist:
+    cmd: cd step1 && python3 prepare_mnist.py
+    deps:
+    - path: data/fashion-mnist/t10k-images-idx3-ubyte.gz
+      md5: 3f731c1801c9c24603b743b45115403d
+      size: 4422102
+    - path: data/fashion-mnist/t10k-labels-idx1-ubyte.gz
+      md5: 070f191891f2e14396b11a9b89cb244b
+      size: 5148
+    - path: data/fashion-mnist/train-images-idx3-ubyte.gz
+      md5: fc6c9afc03e7c02ddd265b252524d461
+      size: 26421880
+    - path: data/fashion-mnist/train-labels-idx1-ubyte.gz
+      md5: b64ffa39d1f5c4d34e7f75a48149c485
+      size: 29515
+    - path: step1/prepare_mnist.py
+      md5: 3d28d46f73313352709d2546bd14c564
+      size: 407
+    outs:
+    - path: data/fashion-mnist/test.pickle
+      md5: 4f906f1bc3b6d93e307c1b4a7b6f619e
+      size: 15732252
+    - path: data/fashion-mnist/train.pickle
+      md5: c335f4377b79b4e6deebf13a52d69653
+      size: 94393152
+  train:
+    cmd: cd step1 && python3 train.py --model-dir ../model/
+    deps:
+    - path: data/fashion-mnist/test.pickle
+      md5: 4f906f1bc3b6d93e307c1b4a7b6f619e
+      size: 15732252
+    - path: data/fashion-mnist/train.pickle
+      md5: c335f4377b79b4e6deebf13a52d69653
+      size: 94393152
+    - path: step1/train.py
+      md5: 1fb011d6950fb9c37813111f75a527ff
+      size: 1439
+    outs:
+    - path: model/model.joblib
+      md5: 912638ceaea37fea03d97bcc7625aa5e
+      size: 126254
+    - path: step1/metrics.json
+      md5: 92d02d6ebbd5f305ee8794649882bfbb
+      size: 24
