@@ -3,3 +3,5 @@
 /train-images-idx3-ubyte.gz
 /train-labels-idx1-ubyte.gz
 /test_file
+/train.pickle
+/test.pickle
