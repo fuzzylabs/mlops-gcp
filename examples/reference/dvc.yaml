@@ -16,8 +16,8 @@ stages:
     - data/fashion-mnist/test.pickle
     - data/fashion-mnist/train.pickle
     - step1/train.py
-    outs:
-    - model/model.joblib
     metrics:
-      - step1/metrics.json:
+      - metrics.json:
           cache: false
+    params:
+    - train.n_neighbours

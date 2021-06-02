@@ -1,11 +1,14 @@
 import json
 
-from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 import joblib
 import os
 import argparse
+import yaml
+
+params = yaml.safe_load(open("../params.yaml"))["train"]
 
 parser = argparse.ArgumentParser("Train model")
 parser.add_argument('--model-dir', dest='model_dir', default=os.getenv("AIP_MODEL_DIR"))
@@ -20,7 +23,7 @@ with open("../data/fashion-mnist/test.pickle", "rb") as f:
     test_images, test_labels = pickle.load(f)
 
 # Define the simplest SVC model
-model = GaussianNB()
+model = KNeighborsClassifier(n_neighbors=params["n_neighbours"])
 print(model)
 
 # Train model
@@ -30,7 +33,7 @@ model.fit(train_images, train_labels)
 predicted_labels = model.predict(test_images)
 accuracy = accuracy_score(list(test_labels), predicted_labels)
 print("Accuracy:", accuracy)
-with open("metrics.json", "w") as f:
+with open("../metrics.json", "w") as f:
     json.dump({
         "accuracy": accuracy
     }, f, indent=2)
