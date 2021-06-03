@@ -1,25 +1,25 @@
 stages:
   prepare-mnist:
-    cmd: cd step3 && python3 prepare_mnist.py
+    cmd: cd step2 && python3 prepare_mnist.py
     deps:
     - data/fashion-mnist/t10k-images-idx3-ubyte.gz
     - data/fashion-mnist/t10k-labels-idx1-ubyte.gz
     - data/fashion-mnist/train-images-idx3-ubyte.gz
     - data/fashion-mnist/train-labels-idx1-ubyte.gz
-    - step3/prepare_mnist.py
+    - step2/prepare_mnist.py
     outs:
     - data/fashion-mnist/test.pickle
     - data/fashion-mnist/train.pickle
   train:
-    cmd: cd step3 && python3 train-vertex.py
+    cmd: cd step2 && python3 train-vertex.py
     deps:
     - data/fashion-mnist/test.pickle
     - data/fashion-mnist/train.pickle
-    - step3/train-vertex.py
+    - step2/train-vertex.py
     metrics:
       - metrics.json:
           cache: false
     outs:
-      - model/vertex_model.json
+      - model/model.joblib
     params:
     - train.n_neighbours
