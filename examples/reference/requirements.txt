@@ -3,3 +3,5 @@ python-mnist
 dvc[gs]
 google-cloud-aiplatform
 google-cloud-storage
+pymongo
+sacred
