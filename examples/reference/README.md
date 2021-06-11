@@ -104,15 +104,52 @@ services/...
 # How to run the example - step-by-step
 <!--TODO-->
 
-## Preparation
+## Authenticate with GCP
+
+```
+gcloud auth login
+```
+## Setup Python environment
+
+You'll need Python 3 along with PIP.
+
 ```
 python -m venv env/
 source env/bin/activate
 pip install -r requirements.txt
+```
+
+## Provision the dataset Google Cloud storage
+
+When setting this example up for the first time in your GCP environment, you'll need to initialise the dataset.
+
+<!-- TODO -->
+
+## Pull the dataset
+
+```
 dvc pull
 ```
-## Step 0 -- locally train a model
-## Step 1 -- locally train with DVC pipeline
+
+## Train the model locally
+
+First, to get an idea as to what the model training looks like, we can run the training script alone with no bits added.
+
+```
+cd step0
+python train.py
+```
+
+<!-- comment on the model and dataset -->
+
+## Provision the experiment tracker
+
+<!-- TODO -->
+
+## Train the model locally with DVC pipeline
+
+This time, we train the model through a model training pipeline, which uses DVC. We also log the training to our experiment tracker.
+
 * Copy `dvc-step1.yaml` to `dvc.yaml`
 * `dvc repro` to run training
 
