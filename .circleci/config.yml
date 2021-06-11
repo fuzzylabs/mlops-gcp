@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.4.0
+
+jobs:
+  run-dvc-pipeline:
+    executor: python/default
+    working_directory: ~/project/examples/reference
+    steps:
+      - checkout:
+          path: ~/project
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          name: DVC pipeline run
+          command: |
+            dvc pull
+            cp dvc-step3.yaml dvc.yaml # Prepare step3
+            dvc repro
+      - run:
+          name: Deploy model
+          command: |
+            cd step3 && python3 deploy-vertex.py
+workflows:
+  reference-example:
+    jobs:
+      - run-dvc-pipeline:
+          name: reference-example-dvc-pipeline
