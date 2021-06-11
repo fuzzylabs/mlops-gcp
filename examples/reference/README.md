@@ -1,6 +1,6 @@
 # Introduction
 
-In this reference example we demonstrate MLOps on Google Cloud Platform with Vertex. This represents what at Fuzzy Labs consider to be _MLOps done right_.
+In this reference example we demonstrate MLOps on Google Cloud Platform with Vertex. This represents what we at Fuzzy Labs consider to be _MLOps done right_.
 
 At the beginning of this project, we set out to address the following questions:
 
@@ -66,7 +66,7 @@ This way, anybody on the team is able to review past experiments and reproduce t
 
 We use Sacred for experiment tracking.
 
-## Adding cloud training infrastructure
+## Adding cloud training infrastructure (Vertex AI)
 
 While at the start of a project we're usually doing everything locally, on our own computers, we ultimately want the ability to train a model on cloud-based resources. This gives us more computational power, but it also centralises training and prepares us for cloud-based deployment, which will come later.
 
@@ -74,16 +74,18 @@ By this point we've already got a model training pipeline in DVC, but we add an 
 
 <!-- need to explain a little bit more of what the pipeline entails and where the handoff is to GCP. Also, how data is accessed differently in GCP vs local -->
 
-<!-- From here down still in-progress / first pass incomplete -->
-## CI/CD
+## Training plus deployment: CI/CD
 
-Finally, we want to deploy a model. We introduce CI/CD, using Circle CI, for this. A Circle pipeline itself invokes the model pipeline. The model pipeline in turn pushes a training job to Vertex. It also pushes an experiment to experiment tracking, and it pushes a trained model to the Vertex model registry.
+Finally, we want to deploy a model. We introduce CI/CD, using Circle CI, for this. A Circle pipeline itself invokes the model pipeline. The model pipeline in turn starts a training job on Vertex. It also pushes an experiment to experiment tracking, and a trained model to the Vertex model registry.
 
-The model is deployed along with an endpoint.
+The model is deployed along with an endpoint, which exposes the model for online inference.
+
+## Monitoring
+
+<!-- TODDO -->
 
 ## Project layout
-
-
+<!--
 data/{...}
 models/model1
 
@@ -93,13 +95,10 @@ models/pipelines/{p1, p2....}   ->
    What goes into a lineage? versioned inputs, outputs, versioned data
    The thing that runs the pipeline builds the lineage
 
-   What pipeline runner do we use? Vertex
-   What experiment tracker do we use? ClearML?
-
 services/...
 
 .circle/pipelines
-
+-->
 
 <a name="running"></a>
 # How to run the example - step-by-step
