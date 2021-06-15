@@ -1,0 +1,5 @@
+.dvc/
+.idea/
+data/
+env/
+model/

@@ -77,11 +77,14 @@ def main(
         display_name="fashion-mnist-model",
         project="fuzzylabs",
         location="europe-west4",
-        serving_container_image_uri="europe-docker.pkg.dev/cloud-aiplatform/prediction/sklearn-cpu.0-23:latest",
+        serving_container_image_uri="gcr.io/fuzzylabs/fashion-mnist-prediction-server",
+        serving_container_predict_route="/infer",
+        serving_container_health_route="/health",
+        serving_container_ports=[8000],
         artifact_uri=output_dir,
     )
 
     with open("../model/vertex_model.json", "w") as f:
         json.dump({
-            "model_name": model.resource_name
+            "model_name": model.resource_name,
         }, f)
