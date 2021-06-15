@@ -1,4 +1,4 @@
-scikit-learn
+scikit-learn==0.23.1
 python-mnist
 dvc[gs]
 google-cloud-aiplatform
@@ -7,3 +7,4 @@ pymongo
 sacred
 starlette
 uvicorn
+dill==0.3.4

@@ -46,6 +46,7 @@ def main(
         requirements=[
             "scikit-learn",
             "google-cloud-storage==1.38.0",
+            "dill",
         ],
         args=[
             "--model-dir", output_dir,
@@ -59,8 +60,6 @@ def main(
         location="europe-west4",
         staging_bucket="gs://fashion-mnist-model/"
     ).run()
-
-    print("")
 
     # Get results back
     print("Fetching the results") # TODO see options for linking from gs, instead of downloading locally

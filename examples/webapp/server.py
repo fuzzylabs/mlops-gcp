@@ -10,7 +10,7 @@ from PIL import Image
 
 templates = Jinja2Templates(directory='templates')
 
-endpoint = Endpoint(endpoint_name="1410998873878429696", project="fuzzylabs", location="europe-west4")
+endpoint = Endpoint(endpoint_name="5491260136276099072", project="fuzzylabs", location="europe-west4")
 
 class_mapping = {
     0: "T-shirt/top",
@@ -34,10 +34,9 @@ async def infer(request):
     form = await request.form()
     contents = await form["img"].read()
     with Image.open(io.BytesIO(contents)) as im:
-        img = np.array(im.resize((28, 28)).convert("L")).reshape((-1,))
+        img = np.array(im.resize((28, 28)).convert("L")).reshape((-1,)).astype(int).tolist()
 
-    img = img.astype(int).tolist()
-    print(len(img))
+    print(type(img))
     prediction = endpoint.predict(instances=[img])
     print(prediction)
     return JSONResponse({

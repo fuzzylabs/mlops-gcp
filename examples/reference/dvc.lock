@@ -15,35 +15,36 @@ stages:
     - path: data/fashion-mnist/train-labels-idx1-ubyte.gz
       md5: b64ffa39d1f5c4d34e7f75a48149c485
       size: 29515
-    - path: step2/prepare_mnist.py
-      md5: 69c41a62da5c1ef7873aac14704d163d
-      size: 408
+    - path: step4/prepare_mnist.py
+      md5: 125b6cf9083d6badd2d748726b9852cb
+      size: 402
     outs:
     - path: data/fashion-mnist/test.pickle
-      md5: 8cdea2ff5e76b337c5368a0d925c1b61
-      size: 15769354
+      md5: e86737aa7d8d8f5d588f91f0ed882e1f
+      size: 15732309
     - path: data/fashion-mnist/train.pickle
-      md5: d627670aee69d228f618477de5dfc07a
-      size: 94619454
+      md5: 1c7f87c1445bd183785e8b20c3d79369
+      size: 94393209
   train:
-    cmd: cd step1 && python3 train.py
+    cmd: cd step4 && python3 train-vertex.py
     deps:
     - path: data/fashion-mnist/test.pickle
-      md5: 4f906f1bc3b6d93e307c1b4a7b6f619e
-      size: 15732252
+      md5: e86737aa7d8d8f5d588f91f0ed882e1f
+      size: 15732309
     - path: data/fashion-mnist/train.pickle
-      md5: c335f4377b79b4e6deebf13a52d69653
-      size: 94393152
-    - path: step1/train.py
-      md5: 033820e0adcf56f078e64d9972795647
-      size: 2711
+      md5: 1c7f87c1445bd183785e8b20c3d79369
+      size: 94393209
+    - path: step4/train-vertex.py
+      md5: 6b131a128ce8815166dc3cb639ecc52c
+      size: 2748
+    - path: step4/train.py
+      md5: 04ab55641cbb62fd42f93bd92ce92b05
+      size: 3784
     params:
       params.yaml:
         train.n_neighbours: 10
     outs:
-    - path: metrics.json
-      md5: 19be113c33643480e398210ab657c7de
-      size: 24
-    - path: model/model.joblib
-      md5: e4103b18dd0a9d44440055a5b98ca8c5
-      size: 376800851
+    - path: model/vertex_model.json
+      md5: 0ac448125854a6ed7b1e0fa7cf9e1b12
+      size: 89
+

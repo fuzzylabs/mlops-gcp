@@ -7,7 +7,7 @@ from dvc.exceptions import OutputNotFoundError, PathMissingError
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
-import pickle
+import dill
 import joblib
 import os
 import yaml
@@ -42,10 +42,10 @@ def config():
 def main(n_neighbors, model_dir, _run):
     # Load whole dataset
     with open("../data/fashion-mnist/train.pickle", "rb") as f:
-        train_images, train_labels = pickle.load(f)
+        train_images, train_labels = dill.load(f)
 
     with open("../data/fashion-mnist/test.pickle", "rb") as f:
-        test_images, test_labels = pickle.load(f)
+        test_images, test_labels = dill.load(f)
 
     # Define the simplest SVC model
     model = KNeighborsClassifier(n_neighbors=n_neighbors)
