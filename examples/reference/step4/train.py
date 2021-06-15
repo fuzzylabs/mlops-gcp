@@ -3,8 +3,7 @@ import os.path
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 import argparse
-import pickle
-import joblib
+import dill
 from sklearn.decomposition import PCA
 from scipy.stats import kstest
 
@@ -81,22 +80,22 @@ def test_model(model, test_dataset):
 
 def load_datasets(train_set_path, test_set_path):
     with wrap_open(train_set_path, "rb") as f:
-        train_set = pickle.load(f)
+        train_set = dill.load(f)
     with wrap_open(test_set_path, "rb") as f:
-        test_set = pickle.load(f)
+        test_set = dill.load(f)
 
     return train_set, test_set
 
 
 def save_results(model, monitoring_model, metrics, model_output_dir, metrics_output_path):
     with wrap_open(os.path.join(model_output_dir, 'model.joblib'), 'wb') as f:
-        joblib.dump(model, f)
+        dill.dump(model, f)
 
     with wrap_open(metrics_output_path, "w") as f:
         json.dump(metrics, f, indent=2)
 
-    with wrap_open(os.path.join(model_output_dir, 'monitoring.pickle'), 'wb') as f:
-        pickle.dump(monitoring_model, f)
+    with wrap_open(os.path.join(model_output_dir, 'monitoring.joblib'), 'wb') as f:
+        dill.dump(monitoring_model, f)
 
 
 if __name__ == "__main__":

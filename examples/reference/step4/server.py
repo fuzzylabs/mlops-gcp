@@ -1,6 +1,5 @@
 import os
-import pickle
-import joblib
+import dill
 from starlette.applications import Starlette
 from starlette.routing import Route
 from starlette.responses import JSONResponse, PlainTextResponse
@@ -11,14 +10,18 @@ from google.cloud.storage.blob import Blob
 storage_client = storage.Client()
 
 storage_uri = os.environ.get("AIP_STORAGE_URI")
-Blob.from_string(os.path.join(storage_uri, "model.joblib"), storage_client).download_to_file("model.joblib")
-model = joblib.load("model.joblib")
-Blob.from_string(os.path.join(storage_uri, "monitoring.pickle"), storage_client).download_to_file("monitoring.pickle")
-with open("monitoring.pickle", "rb") as f:
-    monitoring = pickle.load(f)
+
+print("Getting the model dill")
+with Blob.from_string(os.path.join(storage_uri, "model.joblib"), storage_client).open("rb") as f:
+    model = dill.load(f)
+
+print("Getting the monitoring dill")
+with Blob.from_string(os.path.join(storage_uri, "monitoring.joblib"), storage_client).open("rb") as f:
+    monitoring = dill.load(f)
 
 
 async def health(request: Request):
+    print("Health check")
     return PlainTextResponse("OK")
 
 
@@ -29,7 +32,7 @@ async def infer(request: Request):
     monitoring.add_data(instances)
     predictions = model.predict(instances)
     return JSONResponse({
-        "predictions": predictions
+        "predictions": predictions.astype(int).tolist()
     })
 
 

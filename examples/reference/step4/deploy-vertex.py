@@ -8,5 +8,5 @@ model = Model(model_dict["model_name"])
 
 print("Deploying model")
 model.deploy(
-    machine_type="n1-standard-2"
+    machine_type="n1-standard-2",
 )

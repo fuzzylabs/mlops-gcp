@@ -6,7 +6,7 @@ stages:
     - data/fashion-mnist/t10k-labels-idx1-ubyte.gz
     - data/fashion-mnist/train-images-idx3-ubyte.gz
     - data/fashion-mnist/train-labels-idx1-ubyte.gz
-    - step3/prepare_mnist.py
+    - step4/prepare_mnist.py
     outs:
     - data/fashion-mnist/test.pickle
     - data/fashion-mnist/train.pickle
@@ -15,6 +15,7 @@ stages:
     deps:
     - data/fashion-mnist/test.pickle
     - data/fashion-mnist/train.pickle
+    - step4/train.py
     - step4/train-vertex.py
     outs:
       - model/vertex_model.json

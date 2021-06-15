@@ -3,7 +3,7 @@ import os.path
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 import argparse
-import pickle
+import dill
 import joblib
 
 
@@ -44,9 +44,9 @@ def test_model(model, test_dataset):
 
 def load_datasets(train_set_path, test_set_path):
     with wrap_open(train_set_path, "rb") as f:
-        train_set = pickle.load(f)
+        train_set = dill.load(f)
     with wrap_open(test_set_path, "rb") as f:
-        test_set = pickle.load(f)
+        test_set = dill.load(f)
 
     return train_set, test_set
 
