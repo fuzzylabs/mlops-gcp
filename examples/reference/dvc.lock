@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   prepare-mnist:
-    cmd: cd step1 && python3 prepare_mnist.py
+    cmd: cd step4 && python3 prepare_mnist.py
     deps:
     - path: data/fashion-mnist/t10k-images-idx3-ubyte.gz
       md5: 3f731c1801c9c24603b743b45115403d
@@ -15,7 +15,7 @@ stages:
     - path: data/fashion-mnist/train-labels-idx1-ubyte.gz
       md5: b64ffa39d1f5c4d34e7f75a48149c485
       size: 29515
-    - path: step1/prepare_mnist.py
+    - path: step3/prepare_mnist.py
       md5: 3d28d46f73313352709d2546bd14c564
       size: 407
     outs:

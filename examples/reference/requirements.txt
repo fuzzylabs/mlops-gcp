@@ -5,3 +5,5 @@ google-cloud-aiplatform
 google-cloud-storage
 pymongo
 sacred
+starlette
+uvicorn
