@@ -106,7 +106,32 @@ services/...
 
 <a name="running"></a>
 # How to run the example - step-by-step
-<!--TODO-->
+
+## Setup Python environment
+
+To make collaboration go smoothly, we really want to make sure that every developer can reproduce the same development environment, which means everybody uses the same versions of Python, and the same Python dependencies.
+
+### PyEnv
+
+First, to manage Python, we'll use [PyEnv](https://github.com/pyenv/pyenv). Follow the instructions for your operating system; once installed, PyEnv will download and make available the appropriate version of Python for you.
+
+The Python version for this project is kept in [.python-version](.python-version). We can install and activate this version of Python by running:
+
+```
+pyenv local
+```
+
+After this, run `python --version` and ensure that it matches the version states in [.python-version](.python-version).
+
+### Dependencies (venv + PIP)
+
+With the correct version of Python set up, we'll use [Python venv](https://docs.python.org/3/library/venv.html) to provide an isolated Python environment, and [PIP](https://pypi.org/project/pip) to install and manage Python dependencies.
+
+```
+python -m venv env/
+source env/bin/activate
+pip install -r requirements.txt
+```
 
 ## Authenticate with GCP
 
@@ -117,17 +142,6 @@ gcloud auth login
 <!-- TODO: verify this. Application default login too? -->
 
 <!-- unset GOOGLE_APPLICATION_CREDENTIALS -->
-
-
-## Setup Python environment
-
-You'll need Python 3 along with PIP.
-
-```
-python -m venv env/
-source env/bin/activate
-pip install -r requirements.txt
-```
 
 ## Provision the dataset Google Cloud storage
 
@@ -192,12 +206,17 @@ This step uses [Sacred](https://github.com/IDSIA/sacred) for experiment tracking
 
 ## Train the model on Vertex AI
 
+This step is the same as before, except that this time we will run the training step on Vertex. The pipeline still executes locally, but the training step will invoke the Vertex API in order to run the training step there.
+
 ```
 cp dvc-step2.yaml dvc.yaml
 dvc repro
 ```
 
-## Step 3 -- train and deploy on Vertex AI
+## Train and deploy on Vertex AI
+
+<!-- TODO -->
+
 * Copy `dvc-step3.yaml` to `dvc.yaml`
 * `dvc repro` to run training
 * `cd step3 && python3 deploy-vertex.py` to deploy
