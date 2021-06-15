@@ -1,6 +1,7 @@
 from mnist import MNIST
 import pickle
 
+
 mndata = MNIST('../data/fashion-mnist', gz=True)
 
 train_images, train_labels = mndata.load_training()

@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   prepare-mnist:
-    cmd: cd step4 && python3 prepare_mnist.py
+    cmd: cd step2 && python3 prepare_mnist.py
     deps:
     - path: data/fashion-mnist/t10k-images-idx3-ubyte.gz
       md5: 3f731c1801c9c24603b743b45115403d
@@ -15,16 +15,16 @@ stages:
     - path: data/fashion-mnist/train-labels-idx1-ubyte.gz
       md5: b64ffa39d1f5c4d34e7f75a48149c485
       size: 29515
-    - path: step3/prepare_mnist.py
-      md5: 3d28d46f73313352709d2546bd14c564
-      size: 407
+    - path: step2/prepare_mnist.py
+      md5: 69c41a62da5c1ef7873aac14704d163d
+      size: 408
     outs:
     - path: data/fashion-mnist/test.pickle
-      md5: 4f906f1bc3b6d93e307c1b4a7b6f619e
-      size: 15732252
+      md5: 8cdea2ff5e76b337c5368a0d925c1b61
+      size: 15769354
     - path: data/fashion-mnist/train.pickle
-      md5: c335f4377b79b4e6deebf13a52d69653
-      size: 94393152
+      md5: d627670aee69d228f618477de5dfc07a
+      size: 94619454
   train:
     cmd: cd step1 && python3 train.py
     deps:
@@ -35,8 +35,8 @@ stages:
       md5: c335f4377b79b4e6deebf13a52d69653
       size: 94393152
     - path: step1/train.py
-      md5: 86d8d900811cf6e57e495036fcd29937
-      size: 2710
+      md5: 033820e0adcf56f078e64d9972795647
+      size: 2711
     params:
       params.yaml:
         train.n_neighbours: 10
@@ -45,5 +45,5 @@ stages:
       md5: 19be113c33643480e398210ab657c7de
       size: 24
     - path: model/model.joblib
-      md5: 149742bc1214430536fc8ed89b1d4586
-      size: 376800725
+      md5: e4103b18dd0a9d44440055a5b98ca8c5
+      size: 376800851

@@ -1,8 +1,12 @@
-# Introduction
+# Vertex-Edge
 
 In this reference example we demonstrate MLOps on Google Cloud Platform with Vertex. This represents what we at Fuzzy Labs consider to be _MLOps done right_.
 
+## Motivation
+
 At the beginning of this project, we set out to address the following questions:
+
+<!-- TODO: answers -->
 
 * How do we version data?
 * How would two data scientists work collaboratively on a model?
@@ -13,7 +17,7 @@ At the beginning of this project, we set out to address the following questions:
 * How do other software components interact with the model?
 * How do we monitor the model the model on an ongoing basis?
 
-## Table of contents
+## Table of Contents
 
 The README has two parts. First, we explain the concepts that underlie the reference example. Second, we explain step-by-step how to setup and run the example in your GCP environment.
 
@@ -109,6 +113,12 @@ services/...
 ```
 gcloud auth login
 ```
+
+<!-- TODO: verify this. Application default login too? -->
+
+<!-- unset GOOGLE_APPLICATION_CREDENTIALS -->
+
+
 ## Setup Python environment
 
 You'll need Python 3 along with PIP.
@@ -123,7 +133,7 @@ pip install -r requirements.txt
 
 When setting this example up for the first time in your GCP environment, you'll need to initialise the dataset.
 
-<!-- TODO -->
+<!-- TODO: steps -->
 
 ## Pull the dataset
 
@@ -144,33 +154,49 @@ python train.py
 
 ## Provision the experiment tracker
 
+For experiment tracking, we need an instance of [Sacred](https://github.com/IDSIA/sacred). Sacred works in conjunction with MongoDB, which is used to store the experiments themselves, and [Omniboard](https://vivekratnavel.github.io/omniboard/#/README), which provides the user interface for Sacred.
+
+<!-- TODO: we should encourage people to run this in GCP. Perhaps remove the local instructions -->
+Typically you'll want to provision Sacred in GCP, so that you have centralised experiment tracking. You can also run it locally for testing purposes.
+
+### Running experiment tracking in GCP
+
 <!-- TODO -->
 
-## Train the model locally with DVC pipeline
+### Running experiment tracking locally
 
-This time, we train the model through a model training pipeline, which uses DVC. We also log the training to our experiment tracker.
-
-* Copy `dvc-step1.yaml` to `dvc.yaml`
-* `dvc repro` to run training
-
-### Experiment tracking
-
-This step uses [Sacred](https://github.com/IDSIA/sacred) for experiment tracking. The results are saved to MongoDB.
-To run MongoDB locally with Docker:
+We'll use Docker to run Sacred locally. First, start MongoDB:
 
 ```
 docker run --name mongo -p 27017:27017 -d mongo:latest
 ```
 
-To view the experiments, you can use [Omniboard](https://vivekratnavel.github.io/omniboard/#/README). To start Omniboard locally with the local MongoDB:
+Next, launch Omniboard, which will provide us with a user interface with which to view experiments:
+
 ```
 docker run -it --rm -p 9000:9000 --network host --name omniboard vivekratnavel/omniboard -m localhost:27017:sacred
 ```
 
-and open dashboard in the browser [http://localhost:9000](http://localhost:9000)
-## Step 2 -- train on Vertex AI
-* Copy `dvc-step2.yaml` to `dvc.yaml`
-* `dvc repro` to run training
+You can now open the dashboard in your browser [http://localhost:9000](http://localhost:9000).
+
+## Train the model locally with DVC pipeline
+
+This time, we train the model through a model training pipeline, which uses DVC. We also log the training to our experiment tracker.
+
+```
+cp dvc-step1.yaml dvc.yaml
+dvc repro
+```
+
+This step uses [Sacred](https://github.com/IDSIA/sacred) for experiment tracking. The results are saved to MongoDB.
+
+## Train the model on Vertex AI
+
+```
+cp dvc-step2.yaml dvc.yaml
+dvc repro
+```
+
 ## Step 3 -- train and deploy on Vertex AI
 * Copy `dvc-step3.yaml` to `dvc.yaml`
 * `dvc repro` to run training
