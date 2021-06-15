@@ -217,6 +217,8 @@ dvc repro
 
 <!-- TODO -->
 
-* Copy `dvc-step3.yaml` to `dvc.yaml`
-* `dvc repro` to run training
-* `cd step3 && python3 deploy-vertex.py` to deploy
+```
+cp dvc-step2.yaml dvc.yaml
+dvc repro
+python deploy-vertex.py
+```
