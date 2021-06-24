@@ -41,6 +41,9 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run:
+          name: Install specific Python version
+          command: pyenv install
       - python/install-packages:
           pkg-manager: pip
       - run:
