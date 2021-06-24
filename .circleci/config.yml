@@ -90,22 +90,22 @@ workflows:
     jobs:
       - run-dvc-pipeline:
           name: reference-example-dvc-pipeline
-          filters:
-            branches:
-              only:
-                - master
+#          filters:
+#            branches:
+#              only:
+#                - master
 
   webapp:
     jobs:
       - build-docker:
           name: webapp-build-docker
-          filters:
-            branches:
-              only:
-                - master
+#          filters:
+#            branches:
+#              only:
+#                - master
       - cloud-run-deploy:
           name: webapp-build-docker
-          filters:
-            branches:
-              only:
-                - master
+#          filters:
+#            branches:
+#              only:
+#                - master
