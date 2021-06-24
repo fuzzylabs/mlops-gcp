@@ -18,7 +18,7 @@ parameters:
 
   endpoint_id:
     type: string
-    default: 4669916154234404864
+    default: "4669916154234404864"
 
 executors:
   google-cloud:
@@ -69,21 +69,21 @@ jobs:
           command: |
             gcloud auth configure-docker
             docker push  << pipeline.parameters.gcr_region >>/<< pipeline.parameters.gcr_project_id >>/<< pipeline.parameters.webapp_name >>:${CIRCLE_SHA1}
-    cloud-run-deploy:
-      executor: google-cloud
-      working_directory: ~/project/examples/webapp
-      steps:
-        - checkout:
-            path: ~/project
-        - google_auth
-        - run:
-            name: Deploy Cloud Run
-            command: |
-              gcloud run deploy fashion-mnist-webapp \
-              --image gcr.io/fuzzylabs/fashion-mnist-webapp \
-              --set-env-vars ENDPOINT_ID=<< pipeline.parameters.endpoint_id >> \
-              --platform managed \
-              --project fuzzylabs --region europe-west4
+  cloud-run-deploy:
+    executor: google-cloud
+    working_directory: ~/project/examples/webapp
+    steps:
+      - checkout:
+          path: ~/project
+      - google_auth
+      - run:
+          name: Deploy Cloud Run
+          command: |
+            gcloud run deploy fashion-mnist-webapp \
+            --image gcr.io/fuzzylabs/fashion-mnist-webapp \
+            --set-env-vars ENDPOINT_ID=<< pipeline.parameters.endpoint_id >> \
+            --platform managed \
+            --project fuzzylabs --region europe-west4
 workflows:
   version: 2
   reference-example:
