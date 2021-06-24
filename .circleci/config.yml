@@ -99,6 +99,8 @@ workflows:
     jobs:
       - build-docker:
           name: webapp-build-docker
+          requires:
+            - webapp-cloud-run-deploy
 #          filters:
 #            branches:
 #              only:
