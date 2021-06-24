@@ -43,6 +43,7 @@ jobs:
           path: ~/project
       - python/install-packages:
           pkg-manager: pip
+      - google_auth
       - run:
           name: DVC pipeline run
           command: |
@@ -99,14 +100,14 @@ workflows:
     jobs:
       - build-docker:
           name: webapp-build-docker
-          requires:
-            - webapp-cloud-run-deploy
 #          filters:
 #            branches:
 #              only:
 #                - master
       - cloud-run-deploy:
           name: webapp-cloud-run-deploy
+          requires:
+            - webapp-cloud-run-deploy
 #          filters:
 #            branches:
 #              only:
