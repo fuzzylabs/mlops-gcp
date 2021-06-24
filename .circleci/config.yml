@@ -85,6 +85,7 @@ jobs:
               --platform managed \
               --project fuzzylabs --region europe-west4
 workflows:
+  version: 2
   reference-example:
     jobs:
       - run-dvc-pipeline:
