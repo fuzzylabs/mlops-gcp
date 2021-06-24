@@ -41,6 +41,10 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run:
+          command: |
+            python3 -V
+            python -V
       - python/install-packages:
           pkg-manager: pip
       - run:
@@ -104,7 +108,7 @@ workflows:
 #              only:
 #                - master
       - cloud-run-deploy:
-          name: webapp-build-docker
+          name: webapp-cloud-run-deploy
 #          filters:
 #            branches:
 #              only:
