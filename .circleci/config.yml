@@ -6,15 +6,24 @@ orbs:
 parameters:
   gcr_region:
     type: string
-    default: eu.gcr.io
+    default: gcr.io
 
   gcr_project_id:
     type: string
-    default: digital-forms-dev
+    default: fuzzylabs
 
   webapp_name:
     type: string
     default: fashion-mnist-webapp
+
+  endpoint_id:
+    type: string
+    default: 4669916154234404864
+
+executors:
+  google-cloud:
+    docker:
+      - image: google/cloud-sdk
 
 commands:
   google_auth:
@@ -38,7 +47,7 @@ jobs:
           name: DVC pipeline run
           command: |
             dvc pull
-            cp dvc-step4.yaml dvc.yaml # Prepare step3
+            cp dvc-step4.yaml dvc.yaml # Prepare step4
             dvc repro
       - run:
           name: Deploy model
@@ -46,7 +55,7 @@ jobs:
             cd step4 && python3 deploy-vertex.py
   build-docker:
     executor: google-cloud
-    working_directory: ~/project/services/webapp
+    working_directory: ~/project/examples/webapp
     steps:
       - checkout:
           path: ~/project
@@ -60,15 +69,40 @@ jobs:
           command: |
             gcloud auth configure-docker
             docker push  << pipeline.parameters.gcr_region >>/<< pipeline.parameters.gcr_project_id >>/<< pipeline.parameters.webapp_name >>:${CIRCLE_SHA1}
+    cloud-run-deploy:
+      executor: google-cloud
+      working_directory: ~/project/examples/webapp
+      steps:
+        - checkout:
+            path: ~/project
+        - google_auth
+        - run:
+            name: Deploy Cloud Run
+            command: |
+              gcloud run deploy fashion-mnist-webapp \
+              --image gcr.io/fuzzylabs/fashion-mnist-webapp \
+              --set-env-vars ENDPOINT_ID=<< pipeline.parameters.endpoint_id >> \
+              --platform managed \
+              --project fuzzylabs --region europe-west4
 workflows:
   reference-example:
     jobs:
       - run-dvc-pipeline:
           name: reference-example-dvc-pipeline
+          filters:
+            branches:
+              only:
+                - master
 
   webapp:
     jobs:
       - build-docker:
+          name: webapp-build-docker
+          filters:
+            branches:
+              only:
+                - master
+      - cloud-run-deploy:
           name: webapp-build-docker
           filters:
             branches:
