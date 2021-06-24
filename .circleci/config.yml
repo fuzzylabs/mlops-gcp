@@ -79,7 +79,8 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - google_auth
+      - gcp-cli/install
+      - gcp-cli/initialize
       - run:
           name: Deploy Cloud Run
           command: |
