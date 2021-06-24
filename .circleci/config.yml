@@ -41,23 +41,18 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - python/install-packages:
+          pkg-manager: pip
       - run:
+          name: DVC pipeline run
           command: |
-            rm .python-version
-            python3 -V
-            python -V
-#      - python/install-packages:
-#          pkg-manager: pip
-#      - run:
-#          name: DVC pipeline run
-#          command: |
-#            dvc pull
-#            cp dvc-step4.yaml dvc.yaml # Prepare step4
-#            dvc repro
-#      - run:
-#          name: Deploy model
-#          command: |
-#            cd step4 && python3 deploy-vertex.py
+            dvc pull
+            cp dvc-step4.yaml dvc.yaml # Prepare step4
+            dvc repro
+      - run:
+          name: Deploy model
+          command: |
+            cd step4 && python3 deploy-vertex.py
   build-docker:
     executor: google-cloud
     working_directory: ~/project/examples/webapp
