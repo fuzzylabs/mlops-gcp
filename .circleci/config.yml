@@ -65,14 +65,14 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t << pipeline.parameters.gcr_region >>/<< pipeline.parameters.gcr_project_id >>/<< pipeline.parameters.webapp_name >>:${CIRCLE_SHA1} .
+          command: docker build -t gcr.io/fuzzylabs/fashion-mnist-webapp:${CIRCLE_SHA1} .
       - gcp-cli/install
       - gcp-cli/initialize
       - run:
           name: Push to Docker Registry
           command: |
             gcloud auth configure-docker
-            docker push  << pipeline.parameters.gcr_region >>/<< pipeline.parameters.gcr_project_id >>/<< pipeline.parameters.webapp_name >>:${CIRCLE_SHA1}
+            docker push gcr.io/fuzzylabs/fashion-mnist-webapp:${CIRCLE_SHA1}
   cloud-run-deploy:
     executor: google-cloud
     working_directory: ~/project/examples/webapp
