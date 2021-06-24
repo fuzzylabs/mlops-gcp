@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   prepare-mnist:
-    cmd: cd step4 && python3 prepare_mnist.py
+    cmd: cd step2 && python3 prepare_mnist.py
     deps:
     - path: data/fashion-mnist/t10k-images-idx3-ubyte.gz
       md5: 3f731c1801c9c24603b743b45115403d
@@ -47,3 +47,4 @@ stages:
     - path: model/vertex_model.json
       md5: 672ee9a676cbd6236d0a693cd6e9f7ec
       size: 89
+
