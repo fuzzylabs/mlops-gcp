@@ -5,42 +5,12 @@ from sklearn.metrics import accuracy_score
 import argparse
 import dill
 from sklearn.decomposition import PCA
-from scipy.stats import kstest
 
 
-class PCAMonitoring:
-    def __init__(self, train_data):
-        self.pca = PCA(n_components=5)
-        self.train_data_pca = self.pca.fit_transform(train_data)
-        self.data = []
-        self.monitoring_trigger_number = 100
-
-    def get_distances(self, data):
-        """
-        Calculates Kolmogorov-Smirnov distance and p-values for each PC
-        :param data:
-        :return: Array of tuples (KS distance, p-value)
-        """
-        data_pca = self.pca.transform(data)
-        return [tuple(kstest(self.train_data_pca[:, i], data_pca[:, i])) for i in range(self.pca.n_components)]
-
-    def add_data(self, data):
-        """
-
-        :param data: 2D array of input data of shape (n_samples, dimensions)
-        :return:
-        """
-        self.data += data
-        if len(self.data) >= self.monitoring_trigger_number:
-            distances = self.get_distances(self.data)
-            drifted_pcs = [i for i in range(self.pca.n_components) if distances[i][1] < 0.05]
-            level = "INFO" if len(drifted_pcs) == 0 else "WARNING"
-            print({
-                "severity": level,
-                "kstest": distances,
-                "drifted_pcs": drifted_pcs,
-            })
-            self.data = []
+def train_monitoring(train_data, n_components=5):
+    pca = PCA(n_components)
+    train_data_pca = pca.fit_transform(train_data)
+    return pca, train_data_pca
 
 
 def wrap_open(path: str, mode: str = "r"):
@@ -107,9 +77,15 @@ if __name__ == "__main__":
     parser.add_argument("--model-metrics-path", dest="model_metrics_path", default="../metrics.json")
 
     args = parser.parse_args()
+    print(args)
 
+    print("Load")
     train_set, test_set = load_datasets(args.train_set_path, args.test_set_path)
+    print("Train")
     model = train_model(train_set, args.n_neighbours)
+    print("Test")
     metrics = test_model(model, test_set)
-    monitoring_model = PCAMonitoring(train_set[0])
+    print("PCA")
+    monitoring_model = train_monitoring(train_set[0])
+    print("Save")
     save_results(model, monitoring_model, metrics, args.model_dir, args.model_metrics_path)

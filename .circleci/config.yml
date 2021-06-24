@@ -3,6 +3,28 @@ version: 2.1
 orbs:
   python: circleci/python@1.4.0
 
+parameters:
+  gcr_region:
+    type: string
+    default: eu.gcr.io
+
+  gcr_project_id:
+    type: string
+    default: digital-forms-dev
+
+  webapp_name:
+    type: string
+    default: fashion-mnist-webapp
+
+commands:
+  google_auth:
+    description: Configure the Google SDK for authentication
+    steps:
+      - run: |
+          echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+          gcloud --quiet config set project << pipeline.parameters.gcr_project_id >>
+
 jobs:
   run-dvc-pipeline:
     executor: python/default
@@ -22,8 +44,33 @@ jobs:
           name: Deploy model
           command: |
             cd step4 && python3 deploy-vertex.py
+  build-docker:
+    executor: google-cloud
+    working_directory: ~/project/services/webapp
+    steps:
+      - checkout:
+          path: ~/project
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: docker build -t << pipeline.parameters.gcr_region >>/<< pipeline.parameters.gcr_project_id >>/<< pipeline.parameters.webapp_name >>:${CIRCLE_SHA1} .
+      - google_auth
+      - run:
+          name: Push to Docker Registry
+          command: |
+            gcloud auth configure-docker
+            docker push  << pipeline.parameters.gcr_region >>/<< pipeline.parameters.gcr_project_id >>/<< pipeline.parameters.webapp_name >>:${CIRCLE_SHA1}
 workflows:
   reference-example:
     jobs:
       - run-dvc-pipeline:
           name: reference-example-dvc-pipeline
+
+  webapp:
+    jobs:
+      - build-docker:
+          name: webapp-build-docker
+          filters:
+            branches:
+              only:
+                - master

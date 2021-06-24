@@ -6,18 +6,23 @@ from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.requests import Request
 from google.cloud import storage
 from google.cloud.storage.blob import Blob
+from monitoring import PCAMonitoring
 
 storage_client = storage.Client()
 
 storage_uri = os.environ.get("AIP_STORAGE_URI")
 
 print("Getting the model dill")
+# with open("model.joblib", "rb") as f:
 with Blob.from_string(os.path.join(storage_uri, "model.joblib"), storage_client).open("rb") as f:
     model = dill.load(f)
 
 print("Getting the monitoring dill")
+# with open("monitoring.joblib", "rb") as f:
 with Blob.from_string(os.path.join(storage_uri, "monitoring.joblib"), storage_client).open("rb") as f:
-    monitoring = dill.load(f)
+    pca, train_data_pca = dill.load(f)
+
+monitoring = PCAMonitoring(pca, train_data_pca)
 
 
 async def health(request: Request):

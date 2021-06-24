@@ -4,13 +4,15 @@ from starlette.applications import Starlette
 from starlette.routing import Route
 from starlette.responses import JSONResponse
 from starlette.templating import Jinja2Templates
-import random
 from google.cloud.aiplatform import Endpoint
 from PIL import Image
+import os
+
+endpoint_id = os.environ.get("ENDPOINT_ID")
 
 templates = Jinja2Templates(directory='templates')
 
-endpoint = Endpoint(endpoint_name="5491260136276099072", project="fuzzylabs", location="europe-west4")
+endpoint = Endpoint(endpoint_name=endpoint_id, project="fuzzylabs", location="europe-west4")
 
 class_mapping = {
     0: "T-shirt/top",

@@ -35,15 +35,15 @@ stages:
       md5: 1c7f87c1445bd183785e8b20c3d79369
       size: 94393209
     - path: step4/train-vertex.py
-      md5: 6b131a128ce8815166dc3cb639ecc52c
-      size: 2748
+      md5: af103a2d55ea2ea2de4680be171faf10
+      size: 2931
     - path: step4/train.py
-      md5: 04ab55641cbb62fd42f93bd92ce92b05
-      size: 3784
+      md5: b26c4f950bb8fb7684fb8f0349547a0c
+      size: 2798
     params:
       params.yaml:
         train.n_neighbours: 10
     outs:
     - path: model/vertex_model.json
-      md5: 0ac448125854a6ed7b1e0fa7cf9e1b12
+      md5: 672ee9a676cbd6236d0a693cd6e9f7ec
       size: 89
