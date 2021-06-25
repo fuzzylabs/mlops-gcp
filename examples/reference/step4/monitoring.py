@@ -1,12 +1,26 @@
-from google.cloud.logging import Client
+from google.cloud.logging_v2 import Client
+from google.cloud.logging_v2 import Resource
 from scipy.stats import kstest
 from sklearn.decomposition import PCA
 
 logging_client = Client()
-
-logging_handler = logging_client.get_default_handler()
-logging_client.setup_logging()
-logger = logging_client.logger("Monitoring")
+resource = Resource(
+    type="aiplatform.googleapis.com/Endpoint",
+    labels={
+        "resource_container": "fuzzylabs",
+        "location": "europe-west4",
+        "endpoint_id": "6923967767733338112"
+    }
+)
+logger = logging_client.logger("aiplatform.googleapis.com/prediction_container")
+print("Between this")
+logger.log_struct({
+    "test": "test"
+}, resource=resource)
+print("And this")
+# logging_handler = logging_client.get_default_handler()
+# logging_client.setup_logging()
+# logger = logging_client.logger("Monitoring")
 
 
 class PCAMonitoring:

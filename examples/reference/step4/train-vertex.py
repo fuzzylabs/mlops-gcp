@@ -24,8 +24,8 @@ def config():
     test_uri = dvc.api.get_url("data/fashion-mnist/test.pickle")
 
     # Define output bucket
-    # output_dir = f"gs://fashion-mnist-model/custom_jobs/{uuid.uuid4()}"
-    output_dir = "gs://fashion-mnist-model/custom_jobs/d1f3d7c0-0f02-4ad9-bd52-495edc1331ca"
+    output_dir = f"gs://fashion-mnist-model/custom_jobs/{uuid.uuid4()}"
+    # output_dir = "gs://fashion-mnist-model/custom_jobs/d1f3d7c0-0f02-4ad9-bd52-495edc1331ca"
 
     model_gs_link = os.path.join(output_dir, "model.joblib")
     metrics_gs_link = os.path.join(output_dir, "metrics.json")
@@ -41,28 +41,28 @@ def main(
 ):
     print("Running the job")
     # Run job
-    # CustomJob.from_local_script(
-    #     display_name="Fashion MNIST Naive Bayes",
-    #     script_path="train.py",
-    #     container_uri="europe-docker.pkg.dev/cloud-aiplatform/training/scikit-learn-cpu.0-23:latest",
-    #     requirements=[
-    #         "scikit-learn==0.23.1",
-    #         "google-cloud-storage==1.38.0",
-    #         "dill==0.3.4",
-    #         "scipy==1.6.3",
-    #     ],
-    #     args=[
-    #         "--model-dir", output_dir,
-    #         "--model-metrics-path", metrics_gs_link,
-    #         "--n-neigbours", str(params["n_neighbours"]),
-    #         train_uri,
-    #         test_uri
-    #     ],
-    #     replica_count=1,
-    #     project="fuzzylabs",
-    #     location="europe-west4",
-    #     staging_bucket="gs://fashion-mnist-model/"
-    # ).run()
+    CustomJob.from_local_script(
+        display_name="Fashion MNIST Naive Bayes",
+        script_path="train.py",
+        container_uri="europe-docker.pkg.dev/cloud-aiplatform/training/scikit-learn-cpu.0-23:latest",
+        requirements=[
+            "scikit-learn==0.23.1",
+            "google-cloud-storage==1.38.0",
+            "dill==0.3.4",
+            "scipy==1.6.3",
+        ],
+        args=[
+            "--model-dir", output_dir,
+            "--model-metrics-path", metrics_gs_link,
+            "--n-neigbours", str(params["n_neighbours"]),
+            train_uri,
+            test_uri
+        ],
+        replica_count=1,
+        project="fuzzylabs",
+        location="europe-west4",
+        staging_bucket="gs://fashion-mnist-model/"
+    ).run()
 
     # Get results back
     print("Fetching the results") # TODO see options for linking from gs, instead of downloading locally

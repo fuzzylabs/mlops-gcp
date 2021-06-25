@@ -19,7 +19,7 @@ parameters:
 
   endpoint_id:
     type: string
-    default: "4669916154234404864"
+    default: "6923967767733338112"
 
 executors:
   google-cloud:
@@ -46,6 +46,15 @@ jobs:
           pkg-manager: pip
       - gcp-cli/install
       - gcp-cli/initialize
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: docker build -t gcr.io/fuzzylabs/fashion-mnist-prediction-server:${CIRCLE_SHA1} .
+      - run:
+          name: Push to Docker Registry
+          command: |
+            gcloud auth configure-docker
+            docker push gcr.io/fuzzylabs/fashion-mnist-webapp:${CIRCLE_SHA1}
       - run:
           name: DVC pipeline run
           command: |
