@@ -104,6 +104,10 @@ workflows:
           name: prediction-server-build-docker
           image_name: gcr.io/fuzzylabs/fashion-mnist-prediction-server
           dockerfile_path: examples/reference
+#          filters:
+#            branches:
+#              only:
+#                - master
       - run-dvc-pipeline:
           name: reference-example-dvc-pipeline
           requires:
@@ -119,15 +123,15 @@ workflows:
           name: webapp-build-docker
           image_name: gcr.io/fuzzylabs/fashion-mnist-webapp
           dockerfile_path: examples/webapp
-#          filters:
-#            branches:
-#              only:
-#                - master
+          filters:
+            branches:
+              only:
+                - master
       - cloud-run-deploy:
           name: webapp-cloud-run-deploy
           requires:
             - webapp-build-docker
-#          filters:
-#            branches:
-#              only:
-#                - master
+          filters:
+            branches:
+              only:
+                - master
