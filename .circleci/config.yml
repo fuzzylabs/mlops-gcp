@@ -51,6 +51,8 @@ jobs:
           command: |
             echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
             export GOOGLE_APPLICATION_CREDENTIALS='${HOME}/gcloud-service-key.json'
+            echo $GOOGLE_APPLICATION_CREDENTIALS
+            cat $GOOGLE_APPLICATION_CREDENTIALS
             dvc pull
             cp dvc-step4.yaml dvc.yaml # Prepare step4
             dvc repro
