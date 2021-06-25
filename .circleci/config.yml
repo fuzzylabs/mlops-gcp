@@ -46,15 +46,6 @@ jobs:
           pkg-manager: pip
       - gcp-cli/install
       - gcp-cli/initialize
-      - setup_remote_docker
-      - run:
-          name: Build Docker Image
-          command: docker build -t gcr.io/fuzzylabs/fashion-mnist-prediction-server:${CIRCLE_SHA1} .
-      - run:
-          name: Push to Docker Registry
-          command: |
-            gcloud auth configure-docker
-            docker push gcr.io/fuzzylabs/fashion-mnist-webapp:${CIRCLE_SHA1}
       - run:
           name: DVC pipeline run
           command: |
@@ -67,21 +58,26 @@ jobs:
             cd step4 && python3 deploy-vertex.py
   build-docker:
     executor: google-cloud
-    working_directory: ~/project/examples/webapp
+    parameters:
+      image_name:
+        type: string
+      dockerfile_path:
+        type: string
+    working_directory: ~/project/<< parameters.dockerfile_path >>
     steps:
       - checkout:
           path: ~/project
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t gcr.io/fuzzylabs/fashion-mnist-webapp:${CIRCLE_SHA1} .
+          command: docker build -t << parameters.image_name >>:${CIRCLE_SHA1} .
       - gcp-cli/install
       - gcp-cli/initialize
       - run:
           name: Push to Docker Registry
           command: |
             gcloud auth configure-docker
-            docker push gcr.io/fuzzylabs/fashion-mnist-webapp:${CIRCLE_SHA1}
+            docker push << parameters.image_name >>:${CIRCLE_SHA1}
   cloud-run-deploy:
     executor: google-cloud
     working_directory: ~/project/examples/webapp
@@ -102,8 +98,14 @@ workflows:
   version: 2
   reference-example:
     jobs:
+      - build-docker:
+          name: prediction-server-build-docker
+          image_name: gcr.io/fuzzylabs/fashion-mnist-prediction-server
+          dockerfile_path: examples/reference
       - run-dvc-pipeline:
           name: reference-example-dvc-pipeline
+          requires:
+            - prediction-server-build-docker
 #          filters:
 #            branches:
 #              only:
@@ -113,6 +115,8 @@ workflows:
     jobs:
       - build-docker:
           name: webapp-build-docker
+          image_name: gcr.io/fuzzylabs/fashion-mnist-webapp
+          dockerfile_path: examples/webapp
 #          filters:
 #            branches:
 #              only:
