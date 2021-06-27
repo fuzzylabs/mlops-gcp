@@ -27,13 +27,12 @@ executors:
       - image: google/cloud-sdk
 
 commands:
-  google_auth:
-    description: Configure the Google SDK for authentication
+  dvc_google_auth:
+    description: Configure the DVC to use Google Cloud service account
     steps:
       - run: |
           echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-          gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-          gcloud --quiet config set project << pipeline.parameters.gcr_project_id >>
+          dvc remote modify --local storage credentialpath ${HOME}/gcloud-service-key.json
 
 jobs:
   run-dvc-pipeline:
@@ -44,15 +43,10 @@ jobs:
           path: ~/project
       - python/install-packages:
           pkg-manager: pip
-      - gcp-cli/install
-      - gcp-cli/initialize
+      - dvc_google_auth
       - run:
           name: DVC pipeline run
           command: |
-            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-            export GOOGLE_APPLICATION_CREDENTIALS='${HOME}/gcloud-service-key.json'
-            echo $GOOGLE_APPLICATION_CREDENTIALS
-            cat $GOOGLE_APPLICATION_CREDENTIALS
             dvc pull
             cp dvc-step4.yaml dvc.yaml # Prepare step4
             dvc repro
