@@ -87,6 +87,7 @@ jobs:
       - gcp-cli/initialize
       - run:
           name: Deploy Cloud Run
+          no_output_timeout: 30m
           command: |
             gcloud run deploy fashion-mnist-webapp \
             --image gcr.io/fuzzylabs/fashion-mnist-webapp \
