@@ -15,7 +15,6 @@ stages:
     deps:
     - data/fashion-mnist/test.pickle
     - data/fashion-mnist/train.pickle
-    - step4/train.py
     - step4/train-vertex.py
     outs:
       - model/vertex_model.json
