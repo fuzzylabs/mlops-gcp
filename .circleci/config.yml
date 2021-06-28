@@ -53,6 +53,7 @@ jobs:
             GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json dvc repro
       - run:
           name: Deploy model
+          no_output_timeout: 30m
           command: |
             cd step4 && GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json python3 deploy-vertex.py
   build-docker:
@@ -87,7 +88,6 @@ jobs:
       - gcp-cli/initialize
       - run:
           name: Deploy Cloud Run
-          no_output_timeout: 30m
           command: |
             gcloud run deploy fashion-mnist-webapp \
             --image gcr.io/fuzzylabs/fashion-mnist-webapp \
