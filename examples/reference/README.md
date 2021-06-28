@@ -176,6 +176,53 @@ Typically you'll want to provision Sacred in GCP, so that you have centralised e
 ### Running experiment tracking in GCP
 
 <!-- TODO -->
+Setup MongoDB -- create Compute Engine:
+* region -- europe-west4
+* machine type -- e2-micro
+* boot disk -- Ubuntu 18.04
+* Allow HTTP traffic
+
+Connect to the instance:
+```
+gcloud compute --project fuzzylabs ssh --zone europe-west4-a sacred-mongodb
+```
+
+Install MongoDB on an instance
+```
+sudo apt-get update
+sudo apt-get install mongodb
+sudo service mongodb stop
+sudo mkdir $HOME/db
+sudo mongod --dbpath $HOME/db \
+    --port 80 --fork --logpath \
+    /var/tmp/mongodb
+```
+
+Create GKE cluster
+```
+gcloud container clusters create-auto sacred --project fuzzylabs --region europe-west4
+gcloud container clusters get-credentials sacred --project fuzzylabs --region europe-west4
+```
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install mongodb bitnami/mongodb --set auth.username=sacred,auth.password=supersecret,auth.database=sacred
+kubectl expose deployment mongodb --name mongodb-lb --type LoadBalancer --port 60000 --target-port 27017
+```
+
+```
+kubectl apply -f step4/k8s/omniboard.yaml
+```
+
+Grab IP addresses for Omniboard (can be opened in a browser), and for MongoDB (to be put in secrets).
+
+Put in Google Secret Manager
+```
+gcloud secrets create sacred-mongodb-connection-string
+echo $MONGO_CONNECTION_STRING > sacred-mongodb-connection-string
+gcloud secrets versions add sacred-mongodb-connection-string --data-file=sacred-mongodb-connection-string
+```
+
 
 ### Running experiment tracking locally
 

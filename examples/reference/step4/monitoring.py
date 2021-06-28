@@ -1,23 +1,23 @@
-from google.cloud.logging_v2 import Client
-from google.cloud.logging_v2 import Resource
+# from google.cloud.logging_v2 import Client
+# from google.cloud.logging_v2 import Resource
 from scipy.stats import kstest
 from sklearn.decomposition import PCA
 
-logging_client = Client()
-resource = Resource(
-    type="aiplatform.googleapis.com/Endpoint",
-    labels={
-        "resource_container": "fuzzylabs",
-        "location": "europe-west4",
-        "endpoint_id": "6923967767733338112"
-    }
-)
-logger = logging_client.logger("aiplatform.googleapis.com/prediction_container")
-print("Between this")
-logger.log_struct({
-    "test": "test"
-}, resource=resource)
-print("And this")
+# logging_client = Client()
+# resource = Resource(
+#     type="aiplatform.googleapis.com/Endpoint",
+#     labels={
+#         "resource_container": "fuzzylabs",
+#         "location": "europe-west4",
+#         "endpoint_id": "6923967767733338112"
+#     }
+# )
+# logger = logging_client.logger("aiplatform.googleapis.com/prediction_container")
+# print("Between this")
+# logger.log_struct({
+#     "test": "test"
+# }, resource=resource)
+# print("And this")
 # logging_handler = logging_client.get_default_handler()
 # logging_client.setup_logging()
 # logger = logging_client.logger("Monitoring")
@@ -50,9 +50,9 @@ class PCAMonitoring:
             distances = self.get_distances(self.data)
             drifted_pcs = [i for i in range(self.pca.n_components) if distances[i][1] < 0.05]
             level = "INFO" if len(drifted_pcs) == 0 else "WARNING"
-            logger.log_struct({
-                "severity": level,
-                "kstest": distances,
-                "drifted_pcs": drifted_pcs,
-            }, severity=level)
+            # logger.log_struct({
+            #     "severity": level,
+            #     "kstest": distances,
+            #     "drifted_pcs": drifted_pcs,
+            # }, severity=level)
             self.data = []

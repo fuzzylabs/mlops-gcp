@@ -1,18 +1,38 @@
 import json
 from google.cloud.aiplatform import CustomJob, Model
+from google.cloud.secretmanager import SecretManagerServiceClient
 from google.cloud import storage
 import dvc.api
 import yaml
 import uuid
 import os.path
 from sacred import Experiment
-from sacred.observers import GoogleCloudStorageObserver
+from sacred.observers import MongoObserver
 
-ex = Experiment("fashion-mnist-train-vertex")
-ex.observers.append(GoogleCloudStorageObserver(
-    bucket="fashion-mnist-model",
-    basedir="sacred"
+
+def access_secret_version(secret_id, version_id="latest"):
+    # Create the Secret Manager client.
+    client = SecretManagerServiceClient()
+
+    # Build the resource name of the secret version.
+    name = f"projects/fuzzylabs/secrets/{secret_id}/versions/{version_id}"
+
+    # Access the secret version.
+    response = client.access_secret_version(name=name)
+
+    # Return the decoded payload.
+    return response.payload.data.decode('UTF-8')
+
+
+def get_mongo_connection_string():
+    return access_secret_version("sacred-mongodb-connection-string")
+
+
+ex = Experiment("fashion-mnist-model-training")
+ex.observers.append(MongoObserver(
+    url=get_mongo_connection_string(),
 ))
+
 
 @ex.config
 def config():
@@ -29,6 +49,7 @@ def config():
 
     model_gs_link = os.path.join(output_dir, "model.joblib")
     metrics_gs_link = os.path.join(output_dir, "metrics.json")
+
 
 @ex.automain
 def main(
@@ -65,7 +86,7 @@ def main(
     ).run()
 
     # Get results back
-    print("Fetching the results") # TODO see options for linking from gs, instead of downloading locally
+    print("Fetching the results")  # TODO see options for linking from gs, instead of downloading locally
 
     client = storage.Client()
     metrics = json.loads(storage.Blob.from_string(metrics_gs_link, client).download_as_bytes())
