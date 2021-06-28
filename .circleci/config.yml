@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Deploy model
           command: |
-            cd step4 && python3 deploy-vertex.py
+            cd step4 && GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcloud-service-key.json python3 deploy-vertex.py
   build-docker:
     executor: google-cloud
     parameters:
