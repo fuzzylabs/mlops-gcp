@@ -1,5 +1,6 @@
 scikit-learn==0.23.1
 python-mnist
+dvc[gs]
 google-cloud-aiplatform
 google-cloud-storage
 pymongo
@@ -9,5 +10,3 @@ uvicorn
 dill==0.3.4
 scipy==1.6.3
 google-cloud-logging
-gcsfs==0.6.1
-dvc[gs]==2.4.1
