@@ -10,3 +10,4 @@ uvicorn
 dill==0.3.4
 scipy==1.6.3
 google-cloud-logging
+gcsfs==0.6.1
