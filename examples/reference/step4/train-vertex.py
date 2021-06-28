@@ -50,6 +50,10 @@ def config():
     model_gs_link = os.path.join(output_dir, "model.joblib")
     metrics_gs_link = os.path.join(output_dir, "metrics.json")
 
+    image_tag = os.environ.get("IMAGE_TAG")
+    if image_tag is None:
+        image_tag = "latest"
+
 
 @ex.automain
 def main(
@@ -59,6 +63,7 @@ def main(
         test_uri: str,
         output_dir: str,
         metrics_gs_link: str,
+        image_tag: str,
 ):
     print("Running the job")
     # Run job
@@ -100,7 +105,7 @@ def main(
         display_name="fashion-mnist-model",
         project="fuzzylabs",
         location="europe-west4",
-        serving_container_image_uri="gcr.io/fuzzylabs/fashion-mnist-prediction-server",
+        serving_container_image_uri=f"gcr.io/fuzzylabs/fashion-mnist-prediction-server:{image_tag}",
         serving_container_predict_route="/infer",
         serving_container_health_route="/health",
         serving_container_ports=[8000],
